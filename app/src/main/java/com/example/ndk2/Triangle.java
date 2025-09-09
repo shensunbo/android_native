@@ -1,6 +1,6 @@
 package com.example.ndk2;
 
-import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.util.Log;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -70,51 +70,51 @@ public class Triangle {
         vertexBuffer.position(0);
 
         // 编译着色器
-        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
-        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
+        int vertexShader = loadShader(GLES30.GL_VERTEX_SHADER, vertexShaderCode);
+        int fragmentShader = loadShader(GLES30.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
         // 创建OpenGL程序
-        mProgram = GLES20.glCreateProgram();
+        mProgram = GLES30.glCreateProgram();
         if (mProgram == 0) {
             throw new RuntimeException("Failed to create OpenGL program");
         }
 
         // 附加着色器
-        GLES20.glAttachShader(mProgram, vertexShader);
-        GLES20.glAttachShader(mProgram, fragmentShader);
+        GLES30.glAttachShader(mProgram, vertexShader);
+        GLES30.glAttachShader(mProgram, fragmentShader);
 
         // 链接程序
-        GLES20.glLinkProgram(mProgram);
+        GLES30.glLinkProgram(mProgram);
 
         // 检查链接状态
         int[] linkStatus = new int[1];
-        GLES20.glGetProgramiv(mProgram, GLES20.GL_LINK_STATUS, linkStatus, 0);
-        if (linkStatus[0] != GLES20.GL_TRUE) {
-            String errorMsg = GLES20.glGetProgramInfoLog(mProgram);
-            GLES20.glDeleteProgram(mProgram);
+        GLES30.glGetProgramiv(mProgram, GLES30.GL_LINK_STATUS, linkStatus, 0);
+        if (linkStatus[0] != GLES30.GL_TRUE) {
+            String errorMsg = GLES30.glGetProgramInfoLog(mProgram);
+            GLES30.glDeleteProgram(mProgram);
             throw new RuntimeException("Program link failed: " + errorMsg);
         }
 
         // 释放着色器资源
-        GLES20.glDeleteShader(vertexShader);
-        GLES20.glDeleteShader(fragmentShader);
+        GLES30.glDeleteShader(vertexShader);
+        GLES30.glDeleteShader(fragmentShader);
     }
 
     private int loadShader(int type, String shaderCode) {
-        int shader = GLES20.glCreateShader(type);
+        int shader = GLES30.glCreateShader(type);
         if (shader == 0) {
             throw new RuntimeException("Failed to create shader");
         }
 
-        GLES20.glShaderSource(shader, shaderCode);
-        GLES20.glCompileShader(shader);
+        GLES30.glShaderSource(shader, shaderCode);
+        GLES30.glCompileShader(shader);
 
         // 检查编译状态
         int[] compiled = new int[1];
-        GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
+        GLES30.glGetShaderiv(shader, GLES30.GL_COMPILE_STATUS, compiled, 0);
         if (compiled[0] == 0) {
-            String errorMsg = GLES20.glGetShaderInfoLog(shader);
-            GLES20.glDeleteShader(shader);
+            String errorMsg = GLES30.glGetShaderInfoLog(shader);
+            GLES30.glDeleteShader(shader);
             throw new RuntimeException("Shader compilation failed: " + errorMsg);
         }
 
@@ -127,35 +127,35 @@ public class Triangle {
         }
 
         // 使用程序
-        GLES20.glUseProgram(mProgram);
+        GLES30.glUseProgram(mProgram);
 
         // 获取并启用顶点属性
-        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
-        GLES20.glEnableVertexAttribArray(mPositionHandle);
+        mPositionHandle = GLES30.glGetAttribLocation(mProgram, "vPosition");
+        GLES30.glEnableVertexAttribArray(mPositionHandle);
 
         // 设置顶点数据
-        GLES20.glVertexAttribPointer(
+        GLES30.glVertexAttribPointer(
                 mPositionHandle, COORDS_PER_VERTEX,
-                GLES20.GL_FLOAT, false,
+                GLES30.GL_FLOAT, false,
                 vertexStride, vertexBuffer);
 
         // 设置颜色
-        mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
-        GLES20.glUniform4fv(mColorHandle, 1, mColor, 0);
+        mColorHandle = GLES30.glGetUniformLocation(mProgram, "vColor");
+        GLES30.glUniform4fv(mColorHandle, 1, mColor, 0);
 
         // 设置变换矩阵
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+        mMVPMatrixHandle = GLES30.glGetUniformLocation(mProgram, "uMVPMatrix");
+        GLES30.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 
         // 绘制三角形
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount);
 
         // 禁用顶点属性
-        GLES20.glDisableVertexAttribArray(mPositionHandle);
+        GLES30.glDisableVertexAttribArray(mPositionHandle);
 
         // 检查OpenGL错误
         int error;
-        while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
+        while ((error = GLES30.glGetError()) != GLES30.GL_NO_ERROR) {
             Log.e(TAG, "OpenGL error: 0x" + Integer.toHexString(error));
         }
     }

@@ -84,7 +84,7 @@ import android.opengl.GLSurfaceView;
 // //    public native String stringFromJNI();
 // }
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private OpenGLDemoView glSurfaceView;
     private boolean rendererSet = false;
 

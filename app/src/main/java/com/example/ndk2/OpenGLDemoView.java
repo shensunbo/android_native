@@ -19,8 +19,8 @@ public class OpenGLDemoView extends GLSurfaceView {
     }
 
     private void init() {
-        // Set OpenGL ES 2.0 context
-        setEGLContextClientVersion(2);
+        // Set OpenGL ES 3.0 context
+        setEGLContextClientVersion(3);
         
         // Create and set renderer
         renderer = new OpenGLRenderer();
