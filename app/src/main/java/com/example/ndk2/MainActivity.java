@@ -88,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
     private OpenGLDemoView glSurfaceView;
     private boolean rendererSet = false;
 
+     static {
+         System.loadLibrary("ndk2");
+     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

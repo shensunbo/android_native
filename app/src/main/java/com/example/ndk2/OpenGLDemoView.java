@@ -6,7 +6,7 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
 public class OpenGLDemoView extends GLSurfaceView {
-    private OpenGLRenderer renderer;
+    private NativeRenderer renderer;
 
     public OpenGLDemoView(Context context) {
         super(context);
@@ -23,7 +23,7 @@ public class OpenGLDemoView extends GLSurfaceView {
         setEGLContextClientVersion(3);
         
         // Create and set renderer
-        renderer = new OpenGLRenderer();
+        renderer = new NativeRenderer();
         setRenderer(renderer);
         
         // Render only when needed (for better performance)
