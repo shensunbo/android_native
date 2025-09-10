@@ -88,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
     private OpenGLDemoView glSurfaceView;
     private boolean rendererSet = false;
 
-     static {
-         System.loadLibrary("ndk2");
-     }
+//     static {
+//         System.loadLibrary("native-lib");
+//     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
