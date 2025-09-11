@@ -15,8 +15,11 @@ extern "C" {
     const char* vertexShaderSource = 
     "#version 300 es\n"
     "layout(location = 0) in vec3 aPosition;\n"
+    "layout(location = 1) in vec3 aColor;\n"
+    "out vec3 ourColor;\n"
     "void main() {\n"
     "    gl_Position = vec4(aPosition, 1.0);\n"
+    "    ourColor = aColor;\n"
     "}\n";
 
    const char* fragmentShaderSource = 
@@ -24,14 +27,14 @@ extern "C" {
     "precision mediump float;\n"
     "out vec4 fragColor;\n"
     "uniform vec4 uColor;\n"
+    "in vec3 ourColor;\n"
     "void main() {\n"
-    "    fragColor = uColor;\n"
+    "    fragColor = vec4(ourColor, 1.0);\n"
     "}\n";
 
     GLuint program;
     GLuint vao;
     GLuint vbo;
-
 
 JNIEXPORT void JNICALL Java_com_example_ndk2_NativeRenderer_nativeSurfaceCreated(JNIEnv* env, jobject obj) {
         LOGI("nativeSurfaceCreated called");
@@ -88,9 +91,9 @@ JNIEXPORT void JNICALL Java_com_example_ndk2_NativeRenderer_nativeSurfaceCreated
 
         // 三角形顶点数据（三个点）
         GLfloat vertices[] = {
-                -0.5f, -0.5f, 0.0f,  // 左下角
-                0.5f, -0.5f, 0.0f,  // 右下角
-                0.0f,  0.5f, 0.0f   // 顶部中点
+                -0.9f, -0.8f, 0.0f,  1.0f, 0.0f, 0.0f,// 左下角
+                0.9f, -0.8f, 0.0f,   1.0f, 1.0f, 0.0f,// 右下角
+                0.0f,  0.7f, 0.0f,0.0f, 1.0f, 1.0f// 顶部中点
         };
 
         // 创建并绑定VAO和VBO
@@ -102,8 +105,11 @@ JNIEXPORT void JNICALL Java_com_example_ndk2_NativeRenderer_nativeSurfaceCreated
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
         // 设置顶点属性指针
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+        glEnableVertexAttribArray(1);
 
         glBindVertexArray(0);
 
