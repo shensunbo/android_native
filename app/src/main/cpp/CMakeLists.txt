@@ -26,7 +26,7 @@ project("native-lib")
 # used in the AndroidManifest.xml file.
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
-        native-lib.cpp)
+        native_jni.cpp)
 
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
@@ -36,6 +36,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         android
         log)
 
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE native_lib.cpp)
 
 find_library(glesv3-lib GLESv3) # 链接 OpenGL ES 3.0
 target_link_libraries(${CMAKE_PROJECT_NAME} ${log-lib} ${glesv3-lib})
