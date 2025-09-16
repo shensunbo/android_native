@@ -4,38 +4,69 @@
 #include <jni.h>
 #include <cassert>
 
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
+#include <string>
+
 #define TAG "NativeRenderer"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 // 顶点着色器源码
-static const char* vertexShaderSource = 
-"#version 300 es\n"
-"layout(location = 0) in vec3 aPosition;\n"
-"layout(location = 1) in vec3 aColor;\n"
-"out vec3 ourColor;\n"
-"void main() {\n"
-"    gl_Position = vec4(aPosition, 1.0);\n"
-"    ourColor = aColor;\n"
-"}\n";
+// static const char* vertexShaderSource = 
+// "#version 300 es\n"
+// "layout(location = 0) in vec3 aPosition;\n"
+// "layout(location = 1) in vec3 aColor;\n"
+// "out vec3 ourColor;\n"
+// "void main() {\n"
+// "    gl_Position = vec4(aPosition, 1.0);\n"
+// "    ourColor = aColor;\n"
+// "}\n";
 
-static const char* fragmentShaderSource = 
-"#version 300 es\n"
-"precision mediump float;\n"
-"out vec4 fragColor;\n"
-"uniform vec4 uColor;\n"
-"in vec3 ourColor;\n"
-"void main() {\n"
-"    fragColor = vec4(ourColor, 1.0);\n"
-"}\n";
+// static const char* fragmentShaderSource = 
+// "#version 300 es\n"
+// "precision mediump float;\n"
+// "out vec4 fragColor;\n"
+// "uniform vec4 uColor;\n"
+// "in vec3 ourColor;\n"
+// "void main() {\n"
+// "    fragColor = vec4(ourColor, 1.0);\n"
+// "}\n";
 
 static GLuint program;
 static GLuint vao;
 static GLuint vbo;
+static AAssetManager* assetManager;
+
+static std::string readShaderFromAsset(const char* filePath) {
+    AAsset* asset = AAssetManager_open(assetManager, filePath, AASSET_MODE_BUFFER);
+    if (!asset) {
+        LOGE("Failed to open shader file: %s", filePath);
+        return "";
+    }
+
+    const char* shaderCode = static_cast<const char*>(AAsset_getBuffer(asset));
+    const size_t shaderLength = AAsset_getLength(asset);
+    std::string content(shaderCode, shaderLength);
+
+    AAsset_close(asset);
+    return content;
+}
 
 void  create() {
     LOGI("nativeSurfaceCreated called");
+
+    std::string vertexCode = readShaderFromAsset("shaders/triangle.vert");
+    std::string fragmentCode = readShaderFromAsset("shaders/triangle.frag");
+    
+    if (vertexCode.empty() || fragmentCode.empty()) {
+        LOGE("Failed to load shaders");
+        return;
+    }
+
+    const char* vertexShaderSource = vertexCode.c_str();
+    const char* fragmentShaderSource = fragmentCode.c_str();
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // C++ 中设置清屏颜色
     // 创建和编译顶点着色器
@@ -135,4 +166,12 @@ void draw() {
     // 绘制三角形
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES, 0, 3); // 改为绘制三角形
+}
+
+void initAssetManager(AAssetManager* assetPtr){
+    assert(assetPtr);
+
+    assetManager = assetPtr;
+
+    LOGI("initAssetManager success");
 }

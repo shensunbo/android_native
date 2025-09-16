@@ -10,20 +10,20 @@ public class OpenGLDemoView extends GLSurfaceView {
 
     public OpenGLDemoView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public OpenGLDemoView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
-    private void init() {
+    private void init(Context context) {
         // Set OpenGL ES 3.0 context
         setEGLContextClientVersion(3);
         
         // Create and set renderer
-        renderer = new NativeRenderer();
+        renderer = new NativeRenderer(context);
         setRenderer(renderer);
         
         // Render only when needed (for better performance)

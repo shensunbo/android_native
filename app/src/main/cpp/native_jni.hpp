@@ -2,6 +2,8 @@
 
 // native-lib.cpp
 #include <jni.h>
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
 #include "native_lib.hpp"
 
 extern "C" {
@@ -15,5 +17,10 @@ extern "C" {
 
     JNIEXPORT void JNICALL Java_com_example_ndk2_NativeRenderer_nativeDrawFrame(JNIEnv* env, jobject obj) {
         draw();
+    }
+
+    JNIEXPORT void JNICALL Java_com_example_ndk2_NativeRenderer_initAssetManager(JNIEnv* env, jobject obj, jobject jAssetManager) {
+        // assetManager = AAssetManager_fromJava(env, jAssetManager);
+        initAssetManager(AAssetManager_fromJava(env, jAssetManager));
     }
 }
