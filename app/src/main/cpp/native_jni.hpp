@@ -19,8 +19,12 @@ extern "C" {
         draw();
     }
 
-    JNIEXPORT void JNICALL Java_com_example_ndk2_NativeRenderer_initAssetManager(JNIEnv* env, jobject obj, jobject jAssetManager) {
-        // assetManager = AAssetManager_fromJava(env, jAssetManager);
-        initAssetManager(AAssetManager_fromJava(env, jAssetManager));
+    JNIEXPORT void JNICALL Java_com_example_ndk2_NativeRenderer_initAssetManager(JNIEnv* env, jobject obj, jobject jAssetManager, jstring jInternalPath) {
+        AAssetManager* assetMgr = AAssetManager_fromJava(env, jAssetManager);
+        const char* internalPath = env->GetStringUTFChars(jInternalPath, nullptr);
+        
+        initAssetManager(assetMgr, internalPath);
+        
+        env->ReleaseStringUTFChars(jInternalPath, internalPath);
     }
 }

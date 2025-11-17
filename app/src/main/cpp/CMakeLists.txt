@@ -11,6 +11,15 @@ cmake_minimum_required(VERSION 3.22.1)
 # build script scope).
 project("native-lib")
 
+# ===== Assimp 配置 =====
+# 添加 Assimp 头文件路径
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+# 导入预编译的 Assimp 库
+add_library(assimp SHARED IMPORTED)
+set_target_properties(assimp PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/assimp/libassimp.so)
+
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -39,4 +48,4 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE native_lib.cpp)
 
 find_library(glesv3-lib GLESv3) # 链接 OpenGL ES 3.0
-target_link_libraries(${CMAKE_PROJECT_NAME} ${log-lib} ${glesv3-lib})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${log-lib} ${glesv3-lib} assimp)

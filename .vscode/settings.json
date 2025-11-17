@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*main_log*": "log",
+        "*.log.*": "log",
+        "*.tri": "cpp"
+    }
+}

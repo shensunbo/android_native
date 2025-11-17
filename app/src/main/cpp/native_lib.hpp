@@ -7,4 +7,6 @@ void update(int width, int height);
 
 void draw();
 
-void initAssetManager(AAssetManager* assetPtr);
+void initAssetManager(AAssetManager* assetPtr, const char* storagePath);
+
+void testAssimp();  // Assimp 测试函数
