@@ -15,15 +15,19 @@ static std::string g_resourcePrefix = "";
 
 extern "C" {
     JNIEXPORT void JNICALL Java_com_example_ndk2_NativeRenderer_nativeSurfaceCreated(JNIEnv* env, jobject obj) {
-        // 使用 Renderer API 库进行渲染
-        rendererTestInit(g_screenWidth, g_screenHeight, g_resourcePrefix);
-        rendererTestLogInfo();
+        // 资源已在 initAssetManager() 中设置，这里不需要做任何事
+        // 真正的初始化会在 nativeSurfaceChanged() 时进行（此时已获得正确的屏幕尺寸）
+        // LOGI("Surface created, waiting for surface changed to initialize renderer");
     }
 
     JNIEXPORT void JNICALL Java_com_example_ndk2_NativeRenderer_nativeSurfaceChanged(JNIEnv* env, jobject obj, jint width, jint height) {
+        // LOGI("Surface changed to %dx%d, initializing renderer", width, height);
         g_screenWidth = width;
         g_screenHeight = height;
+        
+        // 此时尺寸已确定，可以初始化渲染器
         rendererTestInit(width, height, g_resourcePrefix);
+        rendererTestLogInfo();
     }
 
     JNIEXPORT void JNICALL Java_com_example_ndk2_NativeRenderer_nativeDrawFrame(JNIEnv* env, jobject obj) {

@@ -45,8 +45,8 @@ public class NativeRenderer implements GLSurfaceView.Renderer {
         }
         
         AssetManager assetManager = context.getAssets();
+        // 设置资源路径，但不初始化渲染器（等待 onSurfaceChanged 获得正确的尺寸）
         initAssetManager(assetManager, filesDir);
-        nativeSurfaceCreated(); // 调用 C++ 初始化
     }
     
     // 检查 assets 是否已复制
@@ -126,7 +126,8 @@ public class NativeRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        nativeSurfaceChanged(width, height); // 通知 C++ 尺寸变化
+        Log.i("NativeRenderer", "Surface changed: " + width + "x" + height);
+        nativeSurfaceChanged(width, height); // 通知 C++ 尺寸变化和初始化渲染器
     }
 
     @Override

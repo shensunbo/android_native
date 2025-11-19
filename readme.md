@@ -7,3 +7,6 @@ used to practice Android native development.
 
 ## colorful triangle 
 ![color_tri](res/color_tri.png)
+
+## HALO
+![halo](res/halo.png)
